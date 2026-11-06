@@ -1,0 +1,11 @@
+# Thư viện Node.js
+node_modules/
+
+# File cấu hình môi trường bảo mật
+.env
+
+# Cấu hình IDE cá nhân
+.vscode/
+
+# File hệ thống của macOS
+.DS_Store

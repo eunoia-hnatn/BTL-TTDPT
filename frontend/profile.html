@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hồ sơ của tôi - Medcare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Nunito:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* ===== DESIGN TOKENS (Đồng bộ với hệ thống) ===== */
+      :root {
+        --primary: #00b5f1;
+        --primary-dark: #008ebf;
+        --primary-light: #e6f7fd;
+        --primary-mid: #00a0d6;
+        --secondary: #0ea47a;
+        --secondary-light: #e8f8f3;
+        --accent: #ff4d4f;
+        --amber: #f89820;
+        --dark: #0c1b2e;
+        --text: #243447;
+        --muted: #6b809a;
+        --bg: #f2f6fa;
+        --white: #ffffff;
+        --card-bg: #ffffff;
+        --border: #eaeff5;
+        --card-shadow: 0 4px 24px rgba(0, 181, 241, 0.08);
+        --radius: 16px;
+        --radius-lg: 20px;
+        --icon-grad-start: #008ebf;
+        --icon-grad-end: #00b5f1;
+      }
+
+      /* ===== DARK MODE TOKENS ===== */
+      [data-theme="dark"] {
+        --primary: #00b5f1;
+        --primary-light: #0d2538;
+        --secondary-light: #064e3b;
+        --dark: #f8fafc;
+        --text: #cbd5e1;
+        --muted: #94a3b8;
+        --bg: #0b1120;
+        --white: #1e293b;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --icon-grad-start: #00f2fe;
+        --icon-grad-end: #4facfe;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        overflow-x: hidden;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      /* ===== DÙNG LẠI CSS HEADER/FOOTER ===== */
+      .topbar {
+        background: var(--primary-dark);
+        padding: 7px 0;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .topbar .inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .topbar-left {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .topbar-left span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .topbar .social-links {
+        display: flex;
+        gap: 8px;
+      }
+      .topbar .social-links a {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 11px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .topbar .social-links a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .hotline-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+
+      header {
+        background: var(--white);
+        box-shadow: 0 1px 16px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        transition:
+          box-shadow 0.3s,
+          background-color 0.3s;
+      }
+      nav {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+        gap: 16px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        flex-shrink: 0;
+        padding-bottom: 5px;
+      }
+      .logo span {
+        font-family: "Nunito", sans-serif;
+        font-size: 44px;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -1.5px;
+        line-height: 1;
+        text-transform: lowercase;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+      }
+      .nav-links > li {
+        position: relative;
+      }
+      .nav-links > li > a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 9px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-links > li > a:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .switch {
+        font-size: 14px;
+        position: relative;
+        display: inline-block;
+        width: 3.5em;
+        height: 2em;
+        margin-right: 8px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        --background: #28096b;
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--background);
+        transition: 0.5s;
+        border-radius: 30px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 1.4em;
+        width: 1.4em;
+        border-radius: 50%;
+        left: 10%;
+        bottom: 15%;
+        box-shadow: inset 8px -4px 0px 0px #fff000;
+        background: var(--background);
+        transition: 0.5s;
+      }
+      input:checked + .slider {
+        background-color: #522ba7;
+      }
+      input:checked + .slider:before {
+        transform: translateX(100%);
+        box-shadow: inset 15px -4px 0px 15px #fff000;
+      }
+
+      /* User Menu trong Header */
+      #user-nav-item {
+        position: relative;
+        margin-left: 8px;
+      }
+      .user-avatar-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        transition: all 0.2s;
+      }
+      .user-avatar-btn:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+      }
+      .dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        min-width: 200px;
+        padding: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: all 0.2s;
+        z-index: 300;
+        border: 1px solid var(--border);
+      }
+      .dropdown.show {
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: translateY(0) !important;
+      }
+      .dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 14px;
+        font-size: 13.5px;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.15s;
+        font-weight: 500;
+      }
+      .dropdown a i {
+        width: 18px;
+        color: var(--primary);
+      }
+      .dropdown a:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      /* ===== TRANG HỒ SƠ (PROFILE LAYOUT) ===== */
+      .page-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        padding: 40px 0 60px;
+        text-align: center;
+      }
+      .page-header h1 {
+        font-family: "Fraunces", serif;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .profile-wrapper {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 32px;
+        margin: -30px auto 80px;
+        align-items: start;
+      }
+
+      /* Sidebar Hồ sơ */
+      .profile-sidebar {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+        padding: 24px;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s;
+      }
+      .profile-user-info {
+        text-align: center;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 24px;
+      }
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: var(--primary);
+        margin: 0 auto 12px;
+        border: 2px solid var(--primary);
+      }
+      .profile-user-info h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 4px;
+      }
+      .profile-user-info p {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .profile-menu {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .profile-menu li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--text);
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .profile-menu li a i {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .profile-menu li a:hover {
+        background: var(--bg);
+      }
+      .profile-menu li a.active {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+      .profile-menu li a.active i {
+        color: var(--primary);
+      }
+      .profile-menu li.logout a {
+        color: var(--accent);
+        margin-top: 16px;
+      }
+      .profile-menu li.logout a i {
+        color: var(--accent);
+      }
+      .profile-menu li.logout a:hover {
+        background: rgba(255, 77, 79, 0.1);
+      }
+
+      /* Nội dung Form Hồ sơ */
+      .profile-content {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+        padding: 36px;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s;
+      }
+      .profile-content h2 {
+        font-family: "Fraunces", serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+      }
+      .profile-content p.sub-title {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        transition: all 0.2s;
+        outline: none;
+      }
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light);
+        background: var(--card-bg);
+      }
+      .form-control:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        padding: 14px 28px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 181, 241, 0.3);
+        margin-top: 16px;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(0, 181, 241, 0.4);
+      }
+
+      /* ===== TOAST ===== */
+      .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 14px 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        transform: translateX(120%);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid var(--border);
+      }
+      .toast.show {
+        transform: translateX(0);
+      }
+      .toast i {
+        font-size: 18px;
+        color: var(--secondary);
+      }
+
+      /* Footer */
+      footer {
+        background: #0c1b2e;
+        color: rgba(255, 255, 255, 0.75);
+        padding: 64px 0 0;
+        margin-top: auto;
+      }
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+        gap: 40px;
+      }
+      .footer-brand .logo-name {
+        color: #fff;
+        font-size: 26px;
+        font-weight: 800;
+        font-family: "Nunito", sans-serif;
+        text-transform: lowercase;
+      }
+      .footer-bottom {
+        margin-top: 48px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        opacity: 0.55;
+      }
+
+      @media (max-width: 900px) {
+        .profile-wrapper {
+          grid-template-columns: 1fr;
+        }
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="topbar">
+      <div class="inner">
+        <div class="topbar-left">
+          <span
+            ><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 7:00 Sáng – 8:00
+            Tối</span
+          >
+          <span
+            ><i class="fas fa-map-marker-alt"></i> 125 Hoàn Kiếm, Hà Nội</span
+          >
+        </div>
+        <div class="topbar-right">
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+          <a href="tel:19002115" class="hotline-badge">
+            <i class="fas fa-phone"></i> 1900 2115
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <header id="main-header">
+      <nav>
+        <a href="index.html" class="logo">
+          <span
+            style="
+              font-family: &quot;Nunito&quot;, sans-serif;
+              font-size: 40px;
+              font-weight: 800;
+              color: var(--primary);
+              letter-spacing: -1.5px;
+              line-height: 1;
+              text-transform: lowercase;
+            "
+            >medcare</span
+          >
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="booking.html">Đặt lịch khám</a></li>
+          <li><a href="doctors.html">Bác sĩ</a></li>
+          <li><a href="guidelines.html">Hướng dẫn</a></li>
+        </ul>
+        <div class="nav-actions" id="nav-actions">
+          <label class="switch" title="Chuyển đổi giao diện Sáng/Tối">
+            <input type="checkbox" id="theme-checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </nav>
+    </header>
+
+    <div class="page-header">
+      <h1>Hồ sơ cá nhân</h1>
+    </div>
+
+    <div class="container">
+      <div class="profile-wrapper">
+        <div class="profile-sidebar">
+          <div class="profile-user-info">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <h3 id="display-name">Người dùng</h3>
+            <p id="display-phone">Số điện thoại</p>
+          </div>
+          <ul class="profile-menu">
+            <li>
+              <a href="profile.html" class="active"
+                ><i class="fas fa-user-circle"></i> Thông tin cá nhân</a
+              >
+            </li>
+            <li>
+              <a href="history.html"
+                ><i class="fas fa-calendar-check"></i> Lịch sử khám bệnh</a
+              >
+            </li>
+            <li>
+              <a
+                href="health-records.html"
+                onclick="alert('Tính năng đang cập nhật')"
+                `
+                ><i class="fas fa-file-medical"></i> Sổ sức khỏe điện tử</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="alert('Tính năng đang cập nhật')"
+                ><i class="fas fa-bell"></i> Thông báo</a
+              >
+            </li>
+            <li class="logout">
+              <a href="#" onclick="logoutUser(event)"
+                ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="profile-content">
+          <h2>Thông tin cá nhân</h2>
+          <p class="sub-title">
+            Quản lý thông tin cá nhân và cách liên hệ của bạn.
+          </p>
+
+          <form id="profile-form">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Họ và tên</label>
+                <input
+                  type="text"
+                  id="input-fullname"
+                  class="form-control"
+                  placeholder="Ví dụ: Nguyễn Văn A"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Số điện thoại (Không thể đổi)</label>
+                <input
+                  type="text"
+                  id="input-phone"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Email liên hệ</label>
+                <input
+                  type="email"
+                  id="input-email"
+                  class="form-control"
+                  placeholder="Nhập địa chỉ email của bạn"
+                />
+              </div>
+              <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="date" id="input-dob" class="form-control" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Giới tính</label>
+                <select id="input-gender" class="form-control">
+                  <option value="">-- Chọn giới tính --</option>
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Nghề nghiệp</label>
+                <input
+                  type="text"
+                  id="input-job"
+                  class="form-control"
+                  placeholder="Ví dụ: Kỹ sư, Giáo viên..."
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Địa chỉ hiện tại</label>
+              <input
+                type="text"
+                id="input-address"
+                class="form-control"
+                placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
+              />
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-save"></i> Lưu Thay Đổi
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div class="logo-name">medcare</div>
+            <p>
+              Nền tảng quản lý bệnh viện hàng đầu Việt Nam, kết nối bệnh nhân
+              với hơn 200 chuyên gia được chứng nhận thuộc 15 chuyên khoa.
+            </p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span
+            >© 2026 Hệ thống Quản lý Bệnh viện MEDCARE. Đã đăng ký bản
+            quyền.</span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ===== DARK/LIGHT MODE LOGIC ===== */
+      const themeCheckbox = document.getElementById("theme-checkbox");
+      const currentTheme = localStorage.getItem("theme") || "light";
+
+      if (currentTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        if (themeCheckbox) themeCheckbox.checked = false;
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        if (themeCheckbox) themeCheckbox.checked = true;
+      }
+
+      if (themeCheckbox) {
+        themeCheckbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            document.documentElement.removeAttribute("data-theme");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      /* ===== TOAST NOTIFICATION ===== */
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type === "error" ? "error" : ""}`;
+        toast.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      /* ===== KIỂM TRA ĐĂNG NHẬP & TẢI DỮ LIỆU HỒ SƠ ===== */
+      document.addEventListener("DOMContentLoaded", () => {
+        const userStr = localStorage.getItem("medicare_currentUser");
+
+        // NẾU CHƯA ĐĂNG NHẬP -> Đá văng ra trang Auth
+        if (!userStr) {
+          window.location.href = "auth.html";
+          return;
+        }
+
+        // Nếu đã đăng nhập, lấy data
+        const user = JSON.parse(userStr);
+        const lastName = user.fullName.split(" ").pop();
+
+        // 1. Render Menu Header
+        const navActions = document.getElementById("nav-actions");
+        if (!document.getElementById("user-nav-item")) {
+          const userMenu = document.createElement("div");
+          userMenu.id = "user-nav-item";
+          userMenu.innerHTML = `
+            <div class="user-avatar-btn" onclick="toggleUserDropdown(event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 9px; border: 1.5px solid var(--border);">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;"><i class="fas fa-user"></i></div>
+              <span style="font-weight: 600; font-size: 14px; color: var(--text);">${lastName}</span>
+              <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.6; color: var(--text);"></i>
+            </div>
+            <div class="dropdown" id="user-dropdown" style="right: 0; left: auto; top: calc(100% + 10px); min-width: 200px;">
+              <a href="profile.html"><i class="fas fa-user-circle"></i> Hồ sơ của tôi</a>
+              <a href="booking.html"><i class="fas fa-calendar-check"></i> Đặt lịch khám</a>
+              <hr style="border: none; border-top: 1px solid var(--border); margin: 4px 0;">
+              <a href="#" onclick="logoutUser(event)" style="color: var(--accent);"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+            </div>
+          `;
+          navActions.appendChild(userMenu);
+        }
+
+        // 2. Điền thông tin vào Sidebar bên trái
+        document.getElementById("display-name").textContent = user.fullName;
+        document.getElementById("display-phone").textContent = user.phone;
+
+        // 3. Điền thông tin vào Form bên phải
+        document.getElementById("input-fullname").value = user.fullName;
+        document.getElementById("input-phone").value = user.phone;
+        if (user.email)
+          document.getElementById("input-email").value = user.email;
+        if (user.dob) document.getElementById("input-dob").value = user.dob;
+        if (user.gender)
+          document.getElementById("input-gender").value = user.gender;
+        if (user.job) document.getElementById("input-job").value = user.job;
+        if (user.address)
+          document.getElementById("input-address").value = user.address;
+      });
+
+      // Xử lý Lưu thông tin Form
+      document
+        .getElementById("profile-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Lấy lại session cũ
+          let user = JSON.parse(localStorage.getItem("medicare_currentUser"));
+
+          // Cập nhật giá trị mới
+          user.fullName = document
+            .getElementById("input-fullname")
+            .value.trim();
+          user.email = document.getElementById("input-email").value.trim();
+          user.dob = document.getElementById("input-dob").value;
+          user.gender = document.getElementById("input-gender").value;
+          user.job = document.getElementById("input-job").value.trim();
+          user.address = document.getElementById("input-address").value.trim();
+
+          // Lưu ngược lại vào localStorage
+          localStorage.setItem("medicare_currentUser", JSON.stringify(user));
+
+          // Cập nhật hiển thị tên ở Sidebar
+          document.getElementById("display-name").textContent = user.fullName;
+
+          // Báo thành công
+          showToast("Cập nhật hồ sơ thành công!");
+        });
+
+      // Logic Header Dropdown
+      function toggleUserDropdown(e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("user-dropdown");
+        if (dropdown) dropdown.classList.toggle("show");
+      }
+      document.addEventListener("click", function () {
+        const dropdown = document.getElementById("user-dropdown");
+        if (dropdown && dropdown.classList.contains("show")) {
+          dropdown.classList.remove("show");
+        }
+      });
+
+      // Hàm đăng xuất
+      function logoutUser(e) {
+        e.preventDefault();
+        localStorage.removeItem("medicare_currentUser");
+        window.location.href = "auth.html"; // Đá văng về trang đăng nhập
+      }
+    </script>
+  </body>
+</html>

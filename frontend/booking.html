@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt lịch khám - Medcare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Nunito:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* ===== DESIGN TOKENS ===== */
+      :root {
+        --primary: #00b5f1;
+        --primary-dark: #008ebf;
+        --primary-light: #e6f7fd;
+        --primary-mid: #00a0d6;
+        --secondary: #0ea47a;
+        --secondary-light: #e8f8f3;
+        --accent: #ff4d4f;
+        --amber: #f89820;
+        --dark: #0c1b2e;
+        --text: #243447;
+        --muted: #6b809a;
+        --bg: #f2f6fa;
+        --white: #ffffff;
+        --card-bg: #ffffff;
+        --border: #eaeff5;
+        --card-shadow: 0 4px 24px rgba(0, 181, 241, 0.08);
+        --card-shadow-hover: 0 8px 40px rgba(0, 181, 241, 0.15);
+        --radius: 16px;
+        --radius-lg: 20px;
+        --icon-grad-start: #008ebf;
+        --icon-grad-end: #00b5f1;
+      }
+
+      /* ===== DARK MODE TOKENS ===== */
+      [data-theme="dark"] {
+        --primary: #00b5f1;
+        --primary-light: #0d2538;
+        --secondary-light: #064e3b;
+        --dark: #f8fafc;
+        --text: #cbd5e1;
+        --muted: #94a3b8;
+        --bg: #0b1120;
+        --white: #1e293b;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.6);
+        --icon-grad-start: #00f2fe;
+        --icon-grad-end: #4facfe;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        overflow-x: hidden;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .gradient-icon {
+        background: linear-gradient(
+          180deg,
+          var(--icon-grad-start) 0%,
+          var(--icon-grad-end) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        transition: background 0.3s ease;
+      }
+
+      /* HEADER & TOPBAR */
+      .topbar {
+        background: var(--primary-dark);
+        padding: 7px 0;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .topbar .inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .topbar-left,
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .topbar-left span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .social-links {
+        display: flex;
+        gap: 8px;
+      }
+      .social-links a {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 11px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .social-links a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .hotline-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .hotline-badge:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      header {
+        background: var(--white);
+        box-shadow: 0 1px 16px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        transition:
+          box-shadow 0.3s,
+          background-color 0.3s;
+      }
+      header.scrolled {
+        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.12);
+      }
+      nav {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+        gap: 16px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        flex-shrink: 0;
+        padding-bottom: 5px;
+      }
+      .logo span {
+        font-family: "Nunito", sans-serif;
+        font-size: 40px;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -1.5px;
+        line-height: 1;
+        text-transform: lowercase;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+      }
+      .nav-links > li {
+        position: relative;
+      }
+      .nav-links > li > a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 9px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-links > li > a:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .nav-links > li > a .fa-chevron-down {
+        font-size: 9px;
+        opacity: 0.5;
+      }
+      .dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow-hover);
+        min-width: 250px;
+        padding: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: all 0.22s;
+        z-index: 300;
+        border: 1px solid var(--border);
+      }
+      .nav-links > li:hover .dropdown {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
+      }
+      .dropdown.show {
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: translateY(0) !important;
+      }
+      .dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 14px;
+        font-size: 13.5px;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.18s;
+        font-weight: 500;
+      }
+      .dropdown a i {
+        width: 18px;
+        color: var(--primary);
+        opacity: 0.8;
+        text-align: center;
+      }
+      .dropdown a:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      #user-nav-item {
+        position: relative;
+        margin-left: 8px;
+      }
+      .user-avatar-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        transition: all 0.2s;
+      }
+      .user-avatar-btn:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 9px;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        font-size: 20px;
+      }
+
+      /* DARK MODE SWITCH BUTTON */
+      .switch {
+        font-size: 14px;
+        position: relative;
+        display: inline-block;
+        width: 3.5em;
+        height: 2em;
+        margin-right: 8px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        --background: #28096b;
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--background);
+        transition: 0.5s;
+        border-radius: 30px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 1.4em;
+        width: 1.4em;
+        border-radius: 50%;
+        left: 10%;
+        bottom: 15%;
+        box-shadow: inset 8px -4px 0px 0px #fff000;
+        background: var(--background);
+        transition: 0.5s;
+      }
+      input:checked + .slider {
+        background-color: #522ba7;
+      }
+      input:checked + .slider:before {
+        transform: translateX(100%);
+        box-shadow: inset 15px -4px 0px 15px #fff000;
+      }
+
+      /* COMMON BUTTONS */
+      .btn-ghost {
+        padding: 8px 18px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        background: transparent;
+        font-family: inherit;
+      }
+      .btn-ghost:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        padding: 14px 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 181, 241, 0.3);
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(0, 181, 241, 0.4);
+      }
+      .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        background: var(--muted);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1.5px solid var(--border);
+        color: var(--text);
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-outline:hover {
+        background: var(--bg);
+        border-color: var(--muted);
+      }
+
+      /* TOAST NOTIFICATION */
+      .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 14px 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        transform: translateX(120%);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid var(--border);
+      }
+      .toast.show {
+        transform: translateX(0);
+      }
+      .toast.error {
+        border-color: var(--accent);
+      }
+      .toast.error i {
+        color: var(--accent);
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0c1b2e;
+        color: rgba(255, 255, 255, 0.75);
+        padding: 64px 0 0;
+        margin-top: auto;
+      }
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+        gap: 40px;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .footer-brand .logo-name {
+        color: #fff;
+        font-size: 26px;
+        font-weight: 800;
+        font-family: "Nunito", sans-serif;
+        text-transform: lowercase;
+      }
+      .footer-brand p {
+        font-size: 13.5px;
+        line-height: 1.65;
+        margin: 14px 0 20px;
+        opacity: 0.7;
+      }
+      .footer-hotline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        margin-bottom: 20px;
+      }
+      .footer-hotline .num {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .footer-hotline .sub {
+        font-size: 12px;
+        opacity: 0.6;
+      }
+      .footer-hotline i {
+        font-size: 22px;
+        color: var(--secondary);
+      }
+      .footer-social {
+        display: flex;
+        gap: 10px;
+      }
+      .footer-social a {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .footer-social a:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+      .footer-col h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 18px;
+      }
+      .footer-col ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-col ul li a {
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-col ul li a:hover {
+        color: #fff;
+      }
+      .footer-bottom {
+        margin-top: 48px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        opacity: 0.55;
+        max-width: 1240px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* PAGE BANNER (Dùng chung) */
+      .page-banner {
+        background: linear-gradient(to right, #e0f4ff 0%, #f0f9ff 100%);
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      [data-theme="dark"] .page-banner {
+        background: linear-gradient(to right, #0a1f33 0%, #0d2a45 100%);
+      }
+      .page-banner-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 2;
+      }
+      .page-banner-title {
+        font-family: "Fraunces", serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+      .page-banner-desc {
+        font-size: 16px;
+        color: var(--dark);
+        font-weight: 500;
+      }
+      .bg-cross {
+        position: absolute;
+        font-size: 120px;
+        color: var(--primary);
+        opacity: 0.05;
+      }
+      [data-theme="dark"] .bg-cross {
+        opacity: 0.1;
+      }
+      .bg-cross-1 {
+        top: 20px;
+        left: 5%;
+      }
+      .bg-cross-2 {
+        bottom: -20px;
+        right: 25%;
+      }
+      .bg-cross-3 {
+        top: 40%;
+        right: 5%;
+      }
+
+      /* CONTAINER & LAYOUT CHUNG */
+      .container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .booking-layout {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr;
+        gap: 32px;
+        margin: 40px auto 80px;
+        align-items: start;
+        max-width: 1200px;
+        padding: 0 24px;
+      }
+
+      /* BOOKING MAIN */
+      .booking-main {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--card-shadow);
+        padding: 36px;
+        position: relative;
+        z-index: 2;
+        border: 1px solid var(--border);
+      }
+      .stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+        position: relative;
+      }
+      .stepper::before {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: var(--border);
+        z-index: 1;
+      }
+      .step {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 25%;
+      }
+      .step-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .step-label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--muted);
+        text-align: center;
+      }
+      .step.active .step-circle {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 0 0 4px var(--primary-light);
+      }
+      .step.active .step-label {
+        color: var(--primary);
+      }
+      .step.completed .step-circle {
+        border-color: var(--secondary);
+        background: var(--secondary);
+        color: white;
+      }
+      .step-content {
+        display: none;
+      }
+      .step-content.active {
+        display: block;
+        animation: fadeIn 0.4s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.2s;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light);
+        background: var(--card-bg);
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .doctor-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--card-bg);
+        margin-bottom: 10px;
+      }
+      .doctor-option:hover {
+        border-color: var(--primary);
+      }
+      .doctor-option.selected {
+        border-color: var(--primary);
+        background: var(--primary-light);
+      }
+      .doctor-option img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .doctor-opt-info h5 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 4px;
+      }
+      .doctor-opt-info p {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .no-doctor-msg {
+        padding: 16px;
+        text-align: center;
+        background: var(--bg);
+        border-radius: 12px;
+        color: var(--muted);
+        font-size: 14px;
+        border: 1px dashed var(--border);
+      }
+      .btn-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 32px;
+        border-top: 1px solid var(--border);
+        padding-top: 24px;
+      }
+
+      /* Booking Summary */
+      .booking-summary {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        position: sticky;
+        top: 100px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+      }
+      .summary-title {
+        font-family: "Fraunces", serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .summary-item {
+        margin-bottom: 18px;
+      }
+      .summary-label {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .summary-value {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .empty-text {
+        color: var(--muted);
+        font-style: italic;
+        font-weight: 400;
+        font-size: 13.5px;
+      }
+
+      /* Payment Box */
+      .payment-box {
+        display: flex;
+        gap: 24px;
+        background: var(--bg);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1.5px dashed var(--primary);
+        max-width: 550px;
+        margin: 0 auto;
+        align-items: center;
+      }
+      .qr-container {
+        background: white;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .payment-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 14px;
+        text-align: left;
+      }
+      .payment-info strong {
+        color: var(--dark);
+        font-size: 15px;
+      }
+      .copy-btn {
+        margin-left: 8px;
+        font-size: 11px;
+        padding: 4px 8px;
+        background: var(--primary-light);
+        color: var(--primary);
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+        border: 1px solid rgba(0, 181, 241, 0.2);
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* QUEUE BOX (Bước 4) */
+      .queue-box {
+        background: var(--primary-light);
+        border: 2px dashed var(--primary);
+        border-radius: 16px;
+        padding: 24px 40px;
+        display: inline-block;
+        margin: 20px auto 32px;
+      }
+      .queue-box p {
+        color: var(--primary-dark);
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+      .queue-box h1 {
+        font-size: 64px;
+        color: var(--primary);
+        margin: 0;
+        font-family: "Nunito", sans-serif;
+        line-height: 1;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .booking-layout {
+          grid-template-columns: 1fr;
+          display: flex;
+          flex-direction: column-reverse;
+        }
+        .booking-summary {
+          position: static;
+          margin-bottom: 24px;
+        }
+        .payment-box {
+          flex-direction: column;
+          text-align: center;
+        }
+        .nav-links {
+          display: none;
+        }
+        .mobile-menu-btn {
+          display: flex;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 480px) {
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="topbar">
+      <div class="inner">
+        <div class="topbar-left">
+          <span
+            ><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 7:00 Sáng – 8:00
+            Tối</span
+          >
+          <span
+            ><i class="fas fa-map-marker-alt"></i> 125 Hoàn Kiếm, Hà Nội</span
+          >
+        </div>
+        <div class="topbar-right">
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+          <a href="tel:19002115" class="hotline-badge">
+            <i class="fas fa-phone"></i> 1900 2115
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <header id="main-header">
+      <nav>
+        <a href="index.html" class="logo">
+          <span
+            style="
+              font-family: &quot;Nunito&quot;, sans-serif;
+              font-size: 40px;
+              font-weight: 800;
+              color: var(--primary);
+              letter-spacing: -1.5px;
+              line-height: 1;
+              text-transform: lowercase;
+            "
+            >medcare</span
+          >
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="find-doctor.html">Tìm bác sĩ</a></li>
+          <li>
+            <a
+              href="booking.html"
+              style="color: var(--primary); background: var(--primary-light)"
+              >Đặt lịch khám</a
+            >
+          </li>
+          <li><a href="#">Hướng dẫn</a></li>
+        </ul>
+        <div class="nav-actions" id="nav-actions">
+          <label class="switch" title="Chuyển đổi giao diện Sáng/Tối">
+            <input type="checkbox" id="theme-checkbox" />
+            <span class="slider"></span>
+          </label>
+          <a href="auth.html" class="btn-ghost" id="login-btn">Đăng nhập</a>
+        </div>
+      </nav>
+    </header>
+
+    <div class="page-banner">
+      <i class="fas fa-plus bg-cross bg-cross-1"></i>
+      <i class="fas fa-plus bg-cross bg-cross-2"></i>
+      <i class="fas fa-plus bg-cross bg-cross-3"></i>
+      <div class="page-banner-inner" style="text-align: center">
+        <h1 class="page-banner-title" id="dynamic-title">Đặt lịch khám bệnh</h1>
+        <p class="page-banner-desc" id="dynamic-desc">
+          Chọn bác sĩ - Đặt lịch nhanh - Không chờ đợi
+        </p>
+      </div>
+    </div>
+
+    <div class="booking-layout">
+      <div class="booking-main">
+        <div class="stepper">
+          <div class="step active" id="indicator-1">
+            <div class="step-circle"><i class="fas fa-stethoscope"></i></div>
+            <div class="step-label">Khám bệnh</div>
+          </div>
+          <div class="step" id="indicator-2">
+            <div class="step-circle"><i class="fas fa-user"></i></div>
+            <div class="step-label">Thông tin</div>
+          </div>
+          <div class="step" id="indicator-3">
+            <div class="step-circle"><i class="fas fa-qrcode"></i></div>
+            <div class="step-label">Thanh toán</div>
+          </div>
+          <div class="step" id="indicator-4">
+            <div class="step-circle"><i class="fas fa-check"></i></div>
+            <div class="step-label">Hoàn tất</div>
+          </div>
+        </div>
+
+        <div class="step-content active" id="step-1">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Ngày khám <span style="color: red">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                id="input-date"
+                onchange="triggerLoadDoctors()"
+              />
+            </div>
+            <div class="form-group">
+              <label>Ca khám <span style="color: red">*</span></label>
+              <select
+                class="form-control"
+                id="input-shift"
+                onchange="triggerLoadDoctors()"
+              >
+                <option value="">-- Chọn ca --</option>
+                <option value="Sáng">Ca Sáng (07:30 - 11:30)</option>
+                <option value="Chiều">Ca Chiều (13:30 - 17:00)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Chuyên khoa <span style="color: red">*</span></label>
+            <select
+              class="form-control"
+              id="input-specialty"
+              onchange="triggerLoadDoctors()"
+            >
+              <option value="">-- Chọn chuyên khoa --</option>
+              <option value="Tim mạch">Tim mạch</option>
+              <option value="Thần kinh">Thần kinh</option>
+              <option value="Chấn thương chỉnh hình">
+                Chấn thương chỉnh hình
+              </option>
+              <option value="Nhi khoa">Nhi khoa</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Bác sĩ khả dụng <span style="color: red">*</span></label>
+            <div id="doctor-list" style="margin-top: 12px">
+              <div class="no-doctor-msg">
+                Vui lòng chọn Ngày, Ca khám và Chuyên khoa để xem danh sách bác
+                sĩ.
+              </div>
+            </div>
+            <input type="hidden" id="input-doctor-id" value="" />
+            <input type="hidden" id="input-doctor-name" value="" />
+          </div>
+
+          <div class="form-group">
+            <label>Triệu chứng / Lý do khám</label>
+            <textarea
+              class="form-control"
+              id="input-symptoms"
+              rows="3"
+              placeholder="Mô tả sơ qua tình trạng sức khỏe của bạn để bác sĩ nắm thông tin..."
+            ></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="nextStep(2)">
+              Tiếp tục <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-2">
+          <div class="grid-2">
+            <div class="form-group">
+              <label
+                >Họ và tên bệnh nhân <span style="color: red">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="input-name"
+                placeholder="Ví dụ: Nguyễn Văn A"
+                oninput="updateSummary()"
+              />
+            </div>
+            <div class="form-group">
+              <label
+                >Số điện thoại liên hệ <span style="color: red">*</span></label
+              >
+              <input
+                type="tel"
+                class="form-control"
+                id="input-phone"
+                placeholder="Số để nhận SMS báo lịch"
+                oninput="updateSummary()"
+              />
+            </div>
+          </div>
+          <div class="btn-group" style="justify-content: space-between">
+            <button class="btn btn-outline" onclick="nextStep(1)">
+              <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button class="btn btn-primary" onclick="goToPayment()">
+              Thanh toán cọc <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-3">
+          <div style="text-align: center; margin-bottom: 24px">
+            <h2
+              style="
+                font-family: &quot;Fraunces&quot;, serif;
+                color: var(--dark);
+                margin-bottom: 8px;
+              "
+            >
+              Thanh toán phí đặt cọc
+            </h2>
+            <p
+              style="
+                color: var(--muted);
+                font-size: 14.5px;
+                max-width: 480px;
+                margin: 0 auto;
+                line-height: 1.6;
+              "
+            >
+              Vui lòng chuyển khoản số tiền cọc để giữ chỗ lịch khám. Phí này sẽ
+              được trừ trực tiếp vào tổng chi phí tại viện.
+            </p>
+          </div>
+
+          <div class="payment-box">
+            <div class="qr-container">
+              <img
+                id="vietqr-image"
+                src=""
+                alt="Mã VietQR Thanh toán"
+                style="
+                  width: 100%;
+                  max-width: 250px;
+                  display: block;
+                  border-radius: 8px;
+                "
+              />
+            </div>
+            <div class="payment-info">
+              <div>
+                <span style="color: var(--muted)">Ngân hàng:</span>
+                <strong>Vietcombank</strong>
+              </div>
+              <div>
+                <span style="color: var(--muted)">Chủ tài khoản:</span>
+                <strong>MEDCARE CLINIC</strong>
+              </div>
+              <div>
+                <span style="color: var(--muted)">Số tài khoản:</span>
+                <strong>1900 2115 99</strong>
+                <span class="copy-btn" onclick="copyText('1900211599')"
+                  ><i class="fas fa-copy"></i
+                ></span>
+              </div>
+              <div style="margin-top: 4px">
+                <span style="color: var(--muted)">Số tiền cọc:</span>
+                <strong style="color: var(--accent); font-size: 20px"
+                  >300.000 VNĐ</strong
+                >
+              </div>
+              <div>
+                <span style="color: var(--muted)">Nội dung chuyển khoản:</span
+                ><br />
+                <strong
+                  id="transfer-content"
+                  style="
+                    background: var(--card-bg);
+                    padding: 6px 10px;
+                    border: 1px solid var(--border);
+                    display: inline-block;
+                    margin-top: 6px;
+                    border-radius: 6px;
+                    color: var(--primary);
+                  "
+                  >MC ...</strong
+                >
+                <span
+                  class="copy-btn"
+                  onclick="
+                    copyText(
+                      document.getElementById('transfer-content').innerText,
+                    )
+                  "
+                  ><i class="fas fa-copy"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              text-align: center;
+              margin-top: 24px;
+              font-size: 14px;
+              font-weight: 500;
+              color: var(--muted);
+            "
+          >
+            <i class="fas fa-spinner fa-spin" style="color: var(--primary)"></i>
+            Hệ thống đang tự động kiểm tra giao dịch...
+          </div>
+
+          <div class="btn-group" style="justify-content: space-between">
+            <button class="btn btn-outline" onclick="nextStep(2)">
+              <i class="fas fa-arrow-left"></i> Quay lại sửa thông tin
+            </button>
+            <button
+              class="btn btn-primary"
+              id="btn-confirm-pay"
+              onclick="simulatePayment()"
+            >
+              <i class="fas fa-check-circle"></i> Tôi đã chuyển khoản
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="step-content"
+          id="step-4"
+          style="text-align: center; padding: 20px 0"
+        >
+          <div
+            style="
+              font-size: 72px;
+              color: var(--secondary);
+              margin-bottom: 16px;
+            "
+          >
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h2
+            style="
+              font-family: &quot;Fraunces&quot;, serif;
+              color: var(--dark);
+              margin-bottom: 12px;
+              font-size: 28px;
+            "
+          >
+            Đặt lịch thành công!
+          </h2>
+
+          <div class="queue-box">
+            <p>SỐ THỨ TỰ KHÁM CỦA BẠN</p>
+            <h1 id="assigned-queue-number">--</h1>
+          </div>
+
+          <p
+            style="
+              color: var(--muted);
+              margin-bottom: 32px;
+              line-height: 1.6;
+              font-size: 15px;
+            "
+          >
+            Hệ thống đã xác nhận thanh toán cọc <strong>300.000đ</strong>.<br />
+            Mã phiếu khám và thông tin chi tiết đã được gửi về số điện thoại của
+            bạn qua Zalo/SMS. Vui lòng đến trước giờ khám 15 phút để làm thủ
+            tục.
+          </p>
+          <a
+            href="history.html"
+            class="btn btn-primary"
+            style="display: inline-flex; width: auto; margin: 0 auto"
+            ><i class="fas fa-calendar-check"></i> Xem lịch sử khám</a
+          >
+        </div>
+      </div>
+
+      <div class="booking-summary">
+        <div class="summary-title">
+          <i class="fas fa-file-medical-alt" style="color: var(--primary)"></i>
+          Phiếu khám bệnh
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-label">Chuyên khoa</div>
+          <div class="summary-value" id="sum-specialty">
+            <span class="empty-text">Chưa chọn</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Bác sĩ phụ trách</div>
+          <div class="summary-value" id="sum-doctor">
+            <span class="empty-text">Chưa chọn</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Thời gian khám</div>
+          <div class="summary-value" id="sum-datetime">
+            <span class="empty-text">Chưa chọn</span>
+          </div>
+        </div>
+
+        <hr
+          style="
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 20px 0;
+          "
+        />
+
+        <div class="summary-item">
+          <div class="summary-label">Họ tên bệnh nhân</div>
+          <div class="summary-value" id="sum-patient">
+            <span class="empty-text">Chưa cập nhật</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Số điện thoại</div>
+          <div class="summary-value" id="sum-phone">
+            <span class="empty-text">Chưa cập nhật</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Số thứ tự khám (1-20)</div>
+          <div class="summary-value" id="sum-queue">
+            <span class="empty-text">Đang chờ cấp số...</span>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: var(--primary-light);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 24px;
+            border: 1px solid rgba(0, 181, 241, 0.2);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <span
+              style="
+                font-size: 13.5px;
+                font-weight: 600;
+                color: var(--primary-dark);
+              "
+              >Phí cọc giữ chỗ:</span
+            >
+            <span
+              style="font-size: 20px; font-weight: 800; color: var(--accent)"
+              >300.000đ</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div
+              class="logo-name"
+              style="
+                font-size: 26px;
+                font-weight: 800;
+                font-family: &quot;Nunito&quot;, sans-serif;
+                text-transform: lowercase;
+              "
+            >
+              medcare
+            </div>
+            <p>Nền tảng quản lý bệnh viện hàng đầu Việt Nam.</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span
+            >© 2026 Hệ thống Quản lý Bệnh viện MEDCARE. Đã đăng ký bản
+            quyền.</span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ===== DARK/LIGHT MODE LOGIC ===== */
+      const themeCheckbox = document.getElementById("theme-checkbox");
+      const currentTheme = localStorage.getItem("theme") || "light";
+      if (currentTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        if (themeCheckbox) themeCheckbox.checked = false;
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        if (themeCheckbox) themeCheckbox.checked = true;
+      }
+      if (themeCheckbox) {
+        themeCheckbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            document.documentElement.removeAttribute("data-theme");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type === "error" ? "error" : ""}`;
+        toast.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      function copyText(text) {
+        navigator.clipboard.writeText(text);
+        showToast("Đã sao chép: " + text);
+      }
+
+      /* ===== CHECK USER SESSION ===== */
+      document.addEventListener("DOMContentLoaded", () => {
+        const userStr = localStorage.getItem("medicare_currentUser");
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          const lastName = user.fullName.split(" ").pop();
+          const navActions = document.getElementById("nav-actions");
+          const loginBtn = document.getElementById("login-btn");
+          if (loginBtn) loginBtn.remove();
+          if (!document.getElementById("user-nav-item")) {
+            const userMenu = document.createElement("div");
+            userMenu.id = "user-nav-item";
+            userMenu.innerHTML = `
+              <div class="user-avatar-btn" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 9px; border: 1.5px solid var(--border);">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;"><i class="fas fa-user"></i></div>
+                <span style="font-weight: 600; font-size: 14px; color: var(--text);">${lastName}</span>
+              </div>
+            `;
+            navActions.appendChild(userMenu);
+          }
+          const nameInput = document.getElementById("input-name");
+          const phoneInput = document.getElementById("input-phone");
+          if (nameInput) nameInput.value = user.fullName;
+          if (phoneInput) phoneInput.value = user.phone;
+          updateSummary();
+        }
+      });
+
+      /* ===== DỮ LIỆU BÁC SĨ MÔ PHỎNG (CÓ THÊM BIẾN CASES) ===== */
+      // Khởi tạo mảng rỗng thay vì fix cứng dữ liệu
+      let doctorsData = [];
+
+      // Hàm tải dữ liệu bác sĩ từ SQL Database
+      async function loadDoctorsFromDB() {
+        try {
+          // Gọi API đến backend (Nhớ đổi port 5000 cho khớp với file .env của bạn)
+          const response = await fetch("http://localhost:5000/api/doctors");
+          const data = await response.json();
+
+          // Chuyển đổi format dữ liệu từ SQL cho phù hợp với Frontend
+          doctorsData = data.map((doc) => ({
+            id: doc.DoctorID,
+            name: doc.FullName,
+            specialty: doc.Specialty,
+            experience: doc.Experience || "Nhiều năm KN",
+            rating: doc.Rating || "5.0",
+            cases: doc.CurrentCases,
+            statusColor: doc.CurrentCases >= 20 ? "red" : "green", // Nếu >= 20 ca thì báo đỏ
+            image: doc.AvatarUrl,
+            gender: "all", // Mặc định để pass bộ lọc
+          }));
+
+          // Render ra màn hình
+          renderDoctors(doctorsData);
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu bác sĩ:", error);
+          document.getElementById("doctors-container").innerHTML =
+            "<p style='color:red;'>Lỗi kết nối cơ sở dữ liệu!</p>";
+        }
+      }
+
+      // Cập nhật lại sự kiện DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", () => {
+        /* ... (Giữ nguyên phần checkUserSession của bạn) ... */
+
+        // Thay vì gọi renderDoctors(doctorsData) ngay lập tức, ta gọi hàm lấy từ DB:
+        loadDoctorsFromDB();
+      });
+
+      function triggerLoadDoctors() {
+        const date = document.getElementById("input-date").value;
+        const shift = document.getElementById("input-shift").value;
+        const specialty = document.getElementById("input-specialty").value;
+        const doctorList = document.getElementById("doctor-list");
+
+        document.getElementById("input-doctor-id").value = "";
+        document.getElementById("input-doctor-name").value = "";
+        updateSummary();
+
+        if (!date || !shift || !specialty) {
+          doctorList.innerHTML =
+            '<div class="no-doctor-msg">Vui lòng chọn Ngày, Ca khám và Chuyên khoa để xem danh sách bác sĩ.</div>';
+          return;
+        }
+
+        // Lọc bác sĩ: Đúng chuyên khoa, đúng ca, và < 20 ca khám
+        const availableDoctors = mockDoctors.filter(
+          (doc) =>
+            doc.spec === specialty && doc.shift === shift && doc.cases < 20,
+        );
+
+        if (availableDoctors.length === 0) {
+          doctorList.innerHTML =
+            '<div class="no-doctor-msg" style="color: var(--accent); border-color: var(--accent);">Rất tiếc! Không có bác sĩ nào trống lịch trong ca này (Đã quá 20 ca). Vui lòng chọn ca khác.</div>';
+          return;
+        }
+
+        let html = "";
+        availableDoctors.forEach((doc) => {
+          html += `
+            <div class="doctor-option" onclick="selectDoctor('${doc.id}', '${doc.name}', this)">
+              <img src="${doc.avatar}" alt="${doc.name}" />
+              <div class="doctor-opt-info">
+                <h5>${doc.name}</h5>
+                <p><i class="fas fa-check-circle" style="color: var(--secondary)"></i> Đang nhận bệnh (Đã đặt ${doc.cases}/20 ca)</p>
+              </div>
+            </div>
+          `;
+        });
+        doctorList.innerHTML = html;
+      }
+
+      function selectDoctor(id, name, el) {
+        document
+          .querySelectorAll(".doctor-option")
+          .forEach((d) => d.classList.remove("selected"));
+        el.classList.add("selected");
+        document.getElementById("input-doctor-id").value = id;
+        document.getElementById("input-doctor-name").value = name;
+        updateSummary();
+      }
+
+      function updateSummary() {
+        const specialty = document.getElementById("input-specialty").value;
+        const doctorName = document.getElementById("input-doctor-name").value;
+        const date = document.getElementById("input-date").value;
+        const shift = document.getElementById("input-shift").value;
+        const name = document.getElementById("input-name").value;
+        const phone = document.getElementById("input-phone").value;
+
+        let dateFormatted = "";
+        if (date) {
+          const [y, m, d] = date.split("-");
+          dateFormatted = `${d}/${m}/${y}`;
+        }
+
+        document.getElementById("sum-specialty").innerHTML = specialty
+          ? `<i class="fas fa-stethoscope" style="color:var(--muted)"></i> ` +
+            specialty
+          : '<span class="empty-text">Chưa chọn</span>';
+        document.getElementById("sum-doctor").innerHTML = doctorName
+          ? `<i class="fas fa-user-md" style="color:var(--muted)"></i> ` +
+            doctorName
+          : '<span class="empty-text">Chưa chọn</span>';
+        const datetimeStr =
+          (shift ? "Ca " + shift + " | " : "") +
+          (dateFormatted ? dateFormatted : "");
+        document.getElementById("sum-datetime").innerHTML = datetimeStr
+          ? `<i class="fas fa-calendar-alt" style="color:var(--muted)"></i> ` +
+            datetimeStr
+          : '<span class="empty-text">Chưa chọn</span>';
+        document.getElementById("sum-patient").innerHTML = name
+          ? name
+          : '<span class="empty-text">Chưa cập nhật</span>';
+        document.getElementById("sum-phone").innerHTML = phone
+          ? phone
+          : '<span class="empty-text">Chưa cập nhật</span>';
+      }
+
+      function nextStep(stepNumber) {
+        if (stepNumber === 2) {
+          const doctorId = document.getElementById("input-doctor-id").value;
+          if (!doctorId) {
+            showToast(
+              "Vui lòng hoàn thiện chọn Ngày, Ca, Chuyên khoa và chọn 1 Bác sĩ!",
+              "error",
+            );
+            return;
+          }
+        }
+        document
+          .querySelectorAll(".step-content")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById(`step-${stepNumber}`).classList.add("active");
+        document.querySelectorAll(".step").forEach((el, index) => {
+          if (index + 1 === stepNumber) {
+            el.classList.add("active");
+            el.classList.remove("completed");
+          } else if (index + 1 < stepNumber) {
+            el.classList.add("completed");
+            el.classList.remove("active");
+          } else {
+            el.classList.remove("active", "completed");
+          }
+        });
+        document
+          .querySelector(".booking-main")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function goToPayment() {
+        const name = document.getElementById("input-name").value;
+        const phone = document.getElementById("input-phone").value;
+        if (!name || !phone) {
+          showToast(
+            "Vui lòng nhập đầy đủ Họ tên và Số điện thoại bệnh nhân!",
+            "error",
+          );
+          return;
+        }
+        const transferContent = "MC " + phone;
+        document.getElementById("transfer-content").innerText = transferContent;
+        const bankName = "vietcombank";
+        const accNumber = "1900211599";
+        const amount = "300000";
+        const accName = "MEDCARE CLINIC";
+        const encodedMemo = encodeURIComponent(transferContent);
+        const encodedAccName = encodeURIComponent(accName);
+        const vietQRUrl = `https://img.vietqr.io/image/${bankName}-${accNumber}-compact.jpg?amount=${amount}&addInfo=${encodedMemo}&accountName=${encodedAccName}`;
+        document.getElementById("vietqr-image").src = vietQRUrl;
+        nextStep(3);
+      }
+
+      /* ===== GIẢ LẬP THANH TOÁN XONG VÀ CẤP SỐ THỨ TỰ ===== */
+      function simulatePayment() {
+        const btn = document.getElementById("btn-confirm-pay");
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fas fa-check"></i> Đã nhận 300.000đ';
+          btn.style.background = "var(--secondary)";
+
+          setTimeout(() => {
+            const randomQueue = Math.floor(Math.random() * 20) + 1;
+            document.getElementById("assigned-queue-number").innerText =
+              randomQueue;
+            document.getElementById("sum-queue").innerHTML =
+              `<span style="color: var(--primary); font-weight: 800; font-size: 16px;"><i class="fas fa-ticket-alt"></i> Số ${randomQueue}</span>`;
+
+            // === LƯU VÀO DATABASE ẢO ===
+            const historyData =
+              JSON.parse(localStorage.getItem("medicare_history")) || [];
+
+            // Lấy thông tin từ form
+            const specialty = document.getElementById("input-specialty").value;
+            const doctorName =
+              document.getElementById("input-doctor-name").value;
+            const date = document.getElementById("input-date").value;
+            const shift = document.getElementById("input-shift").value;
+
+            // Format ngày
+            let dateFormatted = date;
+            if (date) {
+              const [y, m, d] = date.split("-");
+              dateFormatted = `${d}/${m}/${y}`;
+            }
+
+            // Tạo phiếu khám mới
+            const newAppointment = {
+              id: "MC-" + Math.floor(10000 + Math.random() * 90000), // Tạo mã ngẫu nhiên
+              date: dateFormatted,
+              shift: shift ? "Ca " + shift : "",
+              doctor: doctorName || "Chờ sắp xếp",
+              specialty: specialty,
+              status: "upcoming",
+              price: "300.000đ (Đã cọc)",
+            };
+
+            // Lưu lại
+            historyData.unshift(newAppointment); // Thêm lên đầu danh sách
+            localStorage.setItem(
+              "medicare_history",
+              JSON.stringify(historyData),
+            );
+            // ===========================
+
+            nextStep(4);
+          }, 800);
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

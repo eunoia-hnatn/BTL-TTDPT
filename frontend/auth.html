@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập / Đăng ký - Medcare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Nunito:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* ===== DESIGN TOKENS ĐỒNG BỘ TỪ INDEX.HTML ===== */
+      :root {
+        --primary: #00b5f1;
+        --primary-dark: #008ebf;
+        --primary-light: #e6f7fd;
+        --primary-mid: #00a0d6;
+        --secondary: #0ea47a;
+        --secondary-light: #e8f8f3;
+        --accent: #ff4d4f;
+        --amber: #f89820;
+        --dark: #0c1b2e;
+        --text: #243447;
+        --muted: #6b809a;
+        --bg: #f2f6fa;
+        --white: #ffffff;
+        --card-bg: #ffffff;
+        --border: #eaeff5;
+        --card-shadow: 0 12px 36px rgba(0, 181, 241, 0.12);
+        --radius: 20px;
+        --hero-gradient: linear-gradient(145deg, #e6f7fd 0%, #f2faf7 100%);
+      }
+
+      /* ===== DARK MODE TOKENS ===== */
+      [data-theme="dark"] {
+        --primary: #00b5f1;
+        --primary-light: #0d2538;
+        --secondary-light: #064e3b;
+        --dark: #f8fafc;
+        --text: #cbd5e1;
+        --muted: #94a3b8;
+        --bg: #0b1120;
+        --white: #1e293b;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+        --hero-gradient: linear-gradient(145deg, #0f172a 0%, #0b1120 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: var(--hero-gradient);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .auth-wrapper {
+        background: var(--card-bg);
+        border-radius: 24px;
+        box-shadow: var(--card-shadow);
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        overflow: hidden;
+        min-height: 600px;
+        transition:
+          background 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      /* BÊN TRÁI - BRANDING VISUAL */
+      .auth-visual {
+        flex: 1;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 50%,
+          var(--primary-mid) 100%
+        );
+        padding: 48px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-visual::before {
+        content: "";
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+      }
+      .auth-visual::after {
+        content: "";
+        position: absolute;
+        bottom: -50px;
+        left: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+      .logo-white {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        position: relative;
+        z-index: 2;
+      }
+
+      .visual-content {
+        position: relative;
+        z-index: 2;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+      .visual-content h2 {
+        font-family: "Fraunces", serif;
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 16px;
+      }
+      .visual-content p {
+        font-size: 16px;
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+      .visual-stats {
+        display: flex;
+        gap: 24px;
+        margin-top: 32px;
+        position: relative;
+        z-index: 2;
+      }
+      .v-stat {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+        padding: 12px 18px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .v-stat h4 {
+        font-family: "Fraunces", serif;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .v-stat span {
+        font-size: 12.5px;
+        opacity: 0.9;
+      }
+
+      /* BÊN PHẢI - AUTH FORM */
+      .auth-form-container {
+        flex: 1;
+        padding: 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: var(--card-bg);
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        transition: background 0.3s ease;
+      }
+
+      .auth-tabs {
+        display: flex;
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 32px;
+        transition: background 0.3s ease;
+      }
+      .auth-tab {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+      .auth-tab.active {
+        background: var(--card-bg);
+        color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .auth-form {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+      .auth-form.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .auth-header {
+        margin-bottom: 24px;
+      }
+      .auth-header h3 {
+        font-family: "Fraunces", serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+        transition: color 0.3s ease;
+      }
+      .auth-header p {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .input-group {
+        margin-bottom: 16px;
+      }
+      .input-group label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+        transition: color 0.3s ease;
+      }
+      .input-field {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        transition: all 0.2s;
+        outline: none;
+      }
+      .input-field:focus {
+        border-color: var(--primary);
+        background: var(--card-bg);
+        box-shadow: 0 0 0 4px var(--primary-light);
+      }
+      .input-field::placeholder {
+        color: var(--muted);
+      }
+
+      .form-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        font-size: 13px;
+      }
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .remember-me input {
+        accent-color: var(--primary);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+      .forgot-pw {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .forgot-pw:hover {
+        text-decoration: underline;
+      }
+
+      .btn-submit {
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0, 181, 241, 0.3);
+        transition: all 0.2s;
+        margin-bottom: 24px;
+      }
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(0, 181, 241, 0.4);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 24px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border);
+      }
+      .divider span {
+        padding: 0 16px;
+      }
+
+      .social-logins {
+        display: flex;
+        gap: 12px;
+      }
+      .btn-social {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        border: 1.5px solid var(--border);
+        background: var(--card-bg);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-social:hover {
+        background: var(--bg);
+        border-color: var(--primary);
+      }
+      .btn-social img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .back-to-home {
+        text-align: center;
+        margin-top: 24px;
+      }
+      .back-to-home a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .back-to-home a:hover {
+        color: var(--primary);
+      }
+
+      @media (max-width: 900px) {
+        .auth-wrapper {
+          flex-direction: column;
+        }
+        .auth-visual {
+          display: none;
+        }
+        .auth-form-container {
+          max-width: 100%;
+          padding: 32px 24px;
+          margin-top: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-wrapper">
+      <div class="auth-visual">
+        <a href="index.html" class="logo-white" style="text-decoration: none">
+          <span
+            style="
+              font-family: &quot;Nunito&quot;, sans-serif;
+              font-size: 44px;
+              font-weight: 800;
+              color: #fff;
+              letter-spacing: -1.5px;
+              line-height: 1;
+              text-transform: lowercase;
+            "
+            >medcare</span
+          >
+        </a>
+        <div class="visual-content">
+          <h2>Chăm sóc sức khoẻ<br />Tiên tiến, gần bạn hơn</h2>
+          <p>
+            Tham gia nền tảng quản lý bệnh viện hàng đầu Việt Nam để kết nối với
+            hơn 200 chuyên gia giỏi và đặt lịch khám nhanh chóng.
+          </p>
+          <div class="visual-stats">
+            <div class="v-stat">
+              <h4>15+</h4>
+              <span>Chuyên khoa</span>
+            </div>
+            <div class="v-stat">
+              <h4>500K+</h4>
+              <span>Bệnh nhân</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-form-container">
+        <div class="auth-tabs">
+          <div class="auth-tab active" onclick="switchTab('login')">
+            Đăng nhập
+          </div>
+          <div class="auth-tab" onclick="switchTab('register')">Đăng ký</div>
+        </div>
+
+        <div id="form-login" class="auth-form active">
+          <div class="auth-header">
+            <h3>Chào mừng trở lại! 👋</h3>
+            <p>Vui lòng đăng nhập để quản lý lịch khám của bạn.</p>
+          </div>
+          <form action="#" method="POST">
+            <div class="input-group">
+              <label>Số điện thoại / Email</label>
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Nhập số điện thoại của bạn"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label>Mật khẩu</label>
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Nhập mật khẩu"
+                required
+              />
+            </div>
+            <div class="form-options">
+              <label class="remember-me"
+                ><input type="checkbox" checked /> Ghi nhớ</label
+              >
+              <a href="#" class="forgot-pw">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="btn-submit">Đăng nhập ngay</button>
+          </form>
+          <div class="divider"><span>Hoặc đăng nhập bằng</span></div>
+          <div class="social-logins">
+            <button
+              class="btn-social"
+              type="button"
+              onclick="alert('Tính năng đang chờ tích hợp API Google/Facebook')"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
+                alt="Google"
+              />
+              Google
+            </button>
+            <button
+              class="btn-social"
+              type="button"
+              onclick="alert('Tính năng đang chờ tích hợp API Google/Facebook')"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/124/124010.png"
+                alt="Facebook"
+              />
+              Facebook
+            </button>
+          </div>
+        </div>
+
+        <div id="form-register" class="auth-form">
+          <div class="auth-header">
+            <h3>Tạo tài khoản mới 🚀</h3>
+            <p>Đăng ký thành viên để trải nghiệm toàn bộ dịch vụ.</p>
+          </div>
+          <form action="#" method="POST">
+            <div class="input-group">
+              <label>Họ và tên</label>
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Nhập họ và tên có dấu"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label>Số điện thoại</label>
+              <input
+                type="tel"
+                class="input-field"
+                placeholder="Nhập số điện thoại của bạn"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label>Mật khẩu</label>
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Tạo mật khẩu (Ít nhất 6 ký tự)"
+                required
+              />
+            </div>
+            <div class="input-group" style="margin-bottom: 24px">
+              <label>Xác nhận mật khẩu</label>
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Nhập lại mật khẩu"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-submit">Đăng ký tài khoản</button>
+          </form>
+          <div class="divider"><span>Hoặc đăng ký bằng</span></div>
+          <div class="social-logins">
+            <button
+              class="btn-social"
+              type="button"
+              onclick="alert('Tính năng đang chờ tích hợp API Google/Facebook')"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
+                alt="Google"
+              />
+              Google
+            </button>
+            <button
+              class="btn-social"
+              type="button"
+              onclick="alert('Tính năng đang chờ tích hợp API Google/Facebook')"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/124/124010.png"
+                alt="Facebook"
+              />
+              Facebook
+            </button>
+          </div>
+        </div>
+
+        <div class="back-to-home">
+          <a href="index.html">← Quay lại trang chủ</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ===== TỰ ĐỘNG ĐỒNG BỘ DARK/LIGHT MODE TỪ TRANG CHỦ ===== */
+      // Hàm này chạy ngay khi trang tải để đọc state đã lưu từ index.html
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentTheme = localStorage.getItem("theme") || "light";
+        if (currentTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      });
+
+      // ===== CHUYỂN ĐỔI TAB ĐĂNG NHẬP / ĐĂNG KÝ =====
+      function switchTab(tabName) {
+        const tabs = document.querySelectorAll(".auth-tab");
+        tabs.forEach((tab) => tab.classList.remove("active"));
+
+        if (tabName === "login") tabs[0].classList.add("active");
+        else tabs[1].classList.add("active");
+
+        const formLogin = document.getElementById("form-login");
+        const formRegister = document.getElementById("form-register");
+
+        if (tabName === "login") {
+          formRegister.classList.remove("active");
+          formLogin.classList.add("active");
+        } else {
+          formLogin.classList.remove("active");
+          formRegister.classList.add("active");
+        }
+      }
+
+      // ===== XỬ LÝ ĐĂNG KÝ & ĐĂNG NHẬP GIẢ LẬP (LOCALSTORAGE) =====
+      document.addEventListener("DOMContentLoaded", () => {
+        const loginForm = document.querySelectorAll("form")[0];
+        const registerForm = document.querySelectorAll("form")[1];
+
+        // --- Đăng Ký ---
+        registerForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const inputs = registerForm.querySelectorAll(".input-field");
+          const fullName = inputs[0].value.trim();
+          const phone = inputs[1].value.trim();
+          const password = inputs[2].value;
+          const confirmPassword = inputs[3].value;
+
+          if (password !== confirmPassword) {
+            alert("Mật khẩu xác nhận không khớp!");
+            return;
+          }
+
+          let users = JSON.parse(localStorage.getItem("medicare_users")) || [];
+          if (users.find((u) => u.phone === phone)) {
+            alert("Số điện thoại này đã được đăng ký!");
+            return;
+          }
+
+          users.push({ fullName, phone, password });
+          localStorage.setItem("medicare_users", JSON.stringify(users));
+
+          alert("🎉 Đăng ký thành công! Vui lòng đăng nhập.");
+          registerForm.reset();
+          switchTab("login");
+        });
+
+        // --- Đăng Nhập ---
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const inputs = loginForm.querySelectorAll(".input-field");
+          const phone = inputs[0].value.trim();
+          const password = inputs[1].value;
+
+          let users = JSON.parse(localStorage.getItem("medicare_users")) || [];
+          const validUser = users.find(
+            (u) => u.phone === phone && u.password === password,
+          );
+
+          if (validUser) {
+            // Lưu Session
+            localStorage.setItem(
+              "medicare_currentUser",
+              JSON.stringify({
+                fullName: validUser.fullName,
+                phone: validUser.phone,
+              }),
+            );
+
+            // Chuyển hướng về trang chủ
+            window.location.href = "index.html";
+          } else {
+            alert("❌ Sai số điện thoại hoặc mật khẩu!");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

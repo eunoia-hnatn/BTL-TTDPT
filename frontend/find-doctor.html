@@ -1,0 +1,1455 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tìm Bác sĩ - Medcare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Nunito:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* ===== DESIGN TOKENS ===== */
+      :root {
+        --primary: #00b5f1;
+        --primary-dark: #008ebf;
+        --primary-light: #e6f7fd;
+        --primary-mid: #00a0d6;
+        --secondary: #0ea47a;
+        --secondary-light: #e8f8f3;
+        --accent: #ff4d4f;
+        --amber: #f89820;
+        --dark: #0c1b2e;
+        --text: #243447;
+        --muted: #6b809a;
+        --bg: #f2f6fa;
+        --white: #ffffff;
+        --card-bg: #ffffff;
+        --border: #eaeff5;
+        --card-shadow: 0 4px 24px rgba(0, 181, 241, 0.08);
+        --card-shadow-hover: 0 8px 40px rgba(0, 181, 241, 0.15);
+        --radius: 16px;
+        --radius-lg: 20px;
+        --icon-grad-start: #008ebf;
+        --icon-grad-end: #00b5f1;
+      }
+
+      /* ===== DARK MODE TOKENS ===== */
+      [data-theme="dark"] {
+        --primary: #00b5f1;
+        --primary-light: #0d2538;
+        --secondary-light: #064e3b;
+        --dark: #f8fafc;
+        --text: #cbd5e1;
+        --muted: #94a3b8;
+        --bg: #0b1120;
+        --white: #1e293b;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.6);
+        --icon-grad-start: #00f2fe;
+        --icon-grad-end: #4facfe;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        overflow-x: hidden;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .gradient-icon {
+        background: linear-gradient(
+          180deg,
+          var(--icon-grad-start) 0%,
+          var(--icon-grad-end) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        transition: background 0.3s ease;
+      }
+
+      /* HEADER & TOPBAR */
+      .topbar {
+        background: var(--primary-dark);
+        padding: 7px 0;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .topbar .inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .topbar-left,
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .topbar-left span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .social-links {
+        display: flex;
+        gap: 8px;
+      }
+      .social-links a {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 11px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .social-links a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .hotline-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .hotline-badge:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      header {
+        background: var(--white);
+        box-shadow: 0 1px 16px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        transition:
+          box-shadow 0.3s,
+          background-color 0.3s;
+      }
+      header.scrolled {
+        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.12);
+      }
+      nav {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+        gap: 16px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        flex-shrink: 0;
+        padding-bottom: 5px;
+      }
+      .logo span {
+        font-family: "Nunito", sans-serif;
+        font-size: 40px;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -1.5px;
+        line-height: 1;
+        text-transform: lowercase;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+      }
+      .nav-links > li {
+        position: relative;
+      }
+      .nav-links > li > a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 9px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-links > li > a:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .nav-links > li > a .fa-chevron-down {
+        font-size: 9px;
+        opacity: 0.5;
+      }
+      .dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow-hover);
+        min-width: 250px;
+        padding: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: all 0.22s;
+        z-index: 300;
+        border: 1px solid var(--border);
+      }
+      .nav-links > li:hover .dropdown {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
+      }
+      .dropdown.show {
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: translateY(0) !important;
+      }
+      .dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 14px;
+        font-size: 13.5px;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.18s;
+        font-weight: 500;
+      }
+      .dropdown a i {
+        width: 18px;
+        color: var(--primary);
+        opacity: 0.8;
+        text-align: center;
+      }
+      .dropdown a:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      #user-nav-item {
+        position: relative;
+        margin-left: 8px;
+      }
+      .user-avatar-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        transition: all 0.2s;
+      }
+      .user-avatar-btn:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 9px;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        font-size: 20px;
+      }
+
+      /* DARK MODE SWITCH BUTTON */
+      .switch {
+        font-size: 14px;
+        position: relative;
+        display: inline-block;
+        width: 3.5em;
+        height: 2em;
+        margin-right: 8px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        --background: #28096b;
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--background);
+        transition: 0.5s;
+        border-radius: 30px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 1.4em;
+        width: 1.4em;
+        border-radius: 50%;
+        left: 10%;
+        bottom: 15%;
+        box-shadow: inset 8px -4px 0px 0px #fff000;
+        background: var(--background);
+        transition: 0.5s;
+      }
+      input:checked + .slider {
+        background-color: #522ba7;
+      }
+      input:checked + .slider:before {
+        transform: translateX(100%);
+        box-shadow: inset 15px -4px 0px 15px #fff000;
+      }
+
+      /* COMMON BUTTONS */
+      .btn-ghost {
+        padding: 8px 18px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        background: transparent;
+        font-family: inherit;
+      }
+      .btn-ghost:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        padding: 14px 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 181, 241, 0.3);
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(0, 181, 241, 0.4);
+      }
+      .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        background: var(--muted);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1.5px solid var(--border);
+        color: var(--text);
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-outline:hover {
+        background: var(--bg);
+        border-color: var(--muted);
+      }
+
+      /* TOAST NOTIFICATION */
+      .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 14px 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        transform: translateX(120%);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid var(--border);
+      }
+      .toast.show {
+        transform: translateX(0);
+      }
+      .toast.error {
+        border-color: var(--accent);
+      }
+      .toast.error i {
+        color: var(--accent);
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0c1b2e;
+        color: rgba(255, 255, 255, 0.75);
+        padding: 64px 0 0;
+        margin-top: auto;
+      }
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+        gap: 40px;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .footer-brand .logo-name {
+        color: #fff;
+        font-size: 26px;
+        font-weight: 800;
+        font-family: "Nunito", sans-serif;
+        text-transform: lowercase;
+      }
+      .footer-brand p {
+        font-size: 13.5px;
+        line-height: 1.65;
+        margin: 14px 0 20px;
+        opacity: 0.7;
+      }
+      .footer-hotline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        margin-bottom: 20px;
+      }
+      .footer-hotline .num {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .footer-hotline .sub {
+        font-size: 12px;
+        opacity: 0.6;
+      }
+      .footer-hotline i {
+        font-size: 22px;
+        color: var(--secondary);
+      }
+      .footer-social {
+        display: flex;
+        gap: 10px;
+      }
+      .footer-social a {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .footer-social a:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+      .footer-col h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 18px;
+      }
+      .footer-col ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-col ul li a {
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-col ul li a:hover {
+        color: #fff;
+      }
+      .footer-bottom {
+        margin-top: 48px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        opacity: 0.55;
+        max-width: 1240px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* PAGE BANNER (Dùng chung) */
+      .page-banner {
+        background: linear-gradient(to right, #e0f4ff 0%, #f0f9ff 100%);
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      [data-theme="dark"] .page-banner {
+        background: linear-gradient(to right, #0a1f33 0%, #0d2a45 100%);
+      }
+      .page-banner-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+      }
+
+      .page-banner-content {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 32px 40px;
+        max-width: 650px;
+        box-shadow: 0 10px 40px rgba(0, 181, 241, 0.08);
+        border: 1px solid rgba(0, 181, 241, 0.1);
+        z-index: 2;
+        position: relative;
+      }
+      .page-banner-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: "Fraunces", serif;
+      }
+      .page-banner-features {
+        list-style: none;
+      }
+      .page-banner-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 14.5px;
+        color: var(--dark);
+        line-height: 1.5;
+        font-weight: 500;
+      }
+      .page-banner-features li i {
+        color: var(--secondary);
+        font-size: 16px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      .page-banner-image {
+        max-width: 450px;
+        width: 100%;
+        z-index: 1;
+        position: relative;
+      }
+      .page-banner-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 20px;
+        mix-blend-mode: multiply;
+      }
+
+      .bg-cross {
+        position: absolute;
+        font-size: 120px;
+        color: var(--primary);
+        opacity: 0.05;
+      }
+      [data-theme="dark"] .bg-cross {
+        opacity: 0.1;
+      }
+      .bg-cross-1 {
+        top: 20px;
+        left: 5%;
+      }
+      .bg-cross-2 {
+        bottom: -20px;
+        right: 25%;
+      }
+      .bg-cross-3 {
+        top: 40%;
+        right: 5%;
+      }
+      .bg-circle {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 2px dashed rgba(0, 181, 241, 0.15);
+        top: -50px;
+        right: 15%;
+      }
+
+      /* CONTAINER & LAYOUT CHUNG */
+      .container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .search-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 32px;
+        margin: 40px auto 80px;
+        align-items: start;
+      }
+
+      /* FILTER SIDEBAR */
+      .filter-sidebar {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+        padding: 24px;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+      }
+      .filter-title {
+        font-family: "Fraunces", serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+      }
+      .filter-group {
+        margin-bottom: 20px;
+      }
+      .filter-group label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .search-input-wrapper {
+        position: relative;
+      }
+      .search-input-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+      }
+      .search-input-wrapper input {
+        width: 100%;
+        padding: 12px 14px 12px 38px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition: all 0.2s;
+      }
+      .search-input-wrapper input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light);
+        background: var(--card-bg);
+      }
+      .filter-select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .filter-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light);
+        background: var(--card-bg);
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        margin-top: 8px;
+      }
+      .checkbox-group input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+      .btn-reset {
+        width: 100%;
+        padding: 12px;
+        background: transparent;
+        border: 1.5px dashed var(--muted);
+        border-radius: 10px;
+        color: var(--muted);
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 10px;
+      }
+      .btn-reset:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(255, 77, 79, 0.05);
+      }
+
+      /* DOCTOR CARD COMPONENT */
+      .card-base {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+        transition: all 0.3s;
+      }
+      .card-base:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+      }
+      .doctors-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .doctor-card {
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+      }
+      .doctor-avatar {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          145deg,
+          var(--primary-light),
+          var(--secondary-light)
+        );
+      }
+      .doctor-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        transition: transform 0.5s ease;
+      }
+      .doctor-card:hover .doctor-avatar img {
+        transform: scale(1.05);
+      }
+      .doctor-available {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        border-radius: 20px;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .dot-green {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #00e676;
+      }
+      .dot-gray {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #94a3b8;
+      }
+      .dot-red {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ff4d4f;
+      }
+      .dot-amber {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--amber);
+      }
+      .doctor-info {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .doctor-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 4px;
+      }
+      .doctor-spec {
+        font-size: 12.5px;
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .doctor-meta {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+      .doctor-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .doctor-meta-item i {
+        color: var(--amber);
+      }
+      .btn-book-sm {
+        margin-top: auto;
+        display: block;
+        text-align: center;
+        padding: 10px;
+        background: var(--primary-light);
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary);
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .btn-book-sm:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        border: 1px dashed var(--border);
+        color: var(--muted);
+      }
+      .no-results i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+      .no-results h3 {
+        font-size: 18px;
+        color: var(--dark);
+        margin-bottom: 8px;
+        font-family: "Fraunces", serif;
+      }
+      .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding-top: 0px;
+      }
+      .results-count {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .results-count span {
+        color: var(--primary);
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .page-banner-inner {
+          flex-direction: column;
+          text-align: center;
+        }
+        .page-banner-features li {
+          justify-content: center;
+        }
+        .search-layout {
+          grid-template-columns: 1fr;
+          display: flex;
+          flex-direction: column;
+        }
+        .filter-sidebar {
+          position: static;
+          width: 100%;
+          margin-bottom: 24px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .mobile-menu-btn {
+          display: flex;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 1024px) {
+        .doctors-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .doctors-grid {
+          grid-template-columns: 1fr;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="topbar">
+      <div class="inner">
+        <div class="topbar-left">
+          <span
+            ><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 7:00 Sáng – 8:00
+            Tối</span
+          >
+          <span
+            ><i class="fas fa-map-marker-alt"></i> 125 Hoàn Kiếm, Hà Nội</span
+          >
+        </div>
+        <div class="topbar-right">
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+          <a href="tel:19002115" class="hotline-badge">
+            <i class="fas fa-phone"></i> 1900 2115
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <header id="main-header">
+      <nav>
+        <a href="index.html" class="logo">
+          <span
+            style="
+              font-family: &quot;Nunito&quot;, sans-serif;
+              font-size: 40px;
+              font-weight: 800;
+              color: var(--primary);
+              letter-spacing: -1.5px;
+              line-height: 1;
+              text-transform: lowercase;
+            "
+            >medcare</span
+          >
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li>
+            <a
+              href="find-doctor.html"
+              style="color: var(--primary); background: var(--primary-light)"
+              >Tìm bác sĩ</a
+            >
+          </li>
+          <li><a href="booking.html">Đặt lịch khám</a></li>
+          <li><a href="#">Hướng dẫn</a></li>
+        </ul>
+        <div class="nav-actions" id="nav-actions">
+          <label class="switch" title="Chuyển đổi giao diện Sáng/Tối">
+            <input type="checkbox" id="theme-checkbox" />
+            <span class="slider"></span>
+          </label>
+          <a href="auth.html" class="btn-ghost" id="login-btn">Đăng nhập</a>
+        </div>
+      </nav>
+    </header>
+
+    <div class="page-banner">
+      <i class="fas fa-plus bg-cross bg-cross-1"></i>
+      <i class="fas fa-plus bg-cross bg-cross-2"></i>
+      <i class="fas fa-plus bg-cross bg-cross-3"></i>
+      <div class="bg-circle"></div>
+
+      <div class="page-banner-inner">
+        <div class="page-banner-content">
+          <div class="page-banner-title">ĐẶT KHÁM THEO BÁC SĨ</div>
+          <ul class="page-banner-features">
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span
+                >Chủ động chọn bác sĩ tin tưởng, đặt càng sớm, càng có cơ hội có
+                số thứ tự thấp nhất, tránh hết số</span
+              >
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span
+                >Đặt khám theo giờ, không cần chờ lấy số thứ tự, chờ thanh
+                toán</span
+              >
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Được hoàn phí khám nếu hủy phiếu</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span
+                >Mỗi bác sĩ chỉ nhận tối đa 20 lượt đăng ký trong 1 ngày</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="page-banner-image">
+          <img
+            src="https://img.freepik.com/premium-vector/team-doctors-nurses-hospital-staff-medical-concept_175838-2320.jpg?w=800"
+            alt="Đội ngũ bác sĩ"
+            style="mix-blend-mode: multiply; border-radius: 20px"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="search-layout">
+        <div class="filter-sidebar">
+          <div class="filter-title">
+            <i class="fas fa-filter" style="color: var(--primary)"></i> Bộ lọc
+            tìm kiếm
+          </div>
+
+          <div class="filter-group">
+            <label>Tên bác sĩ</label>
+            <div class="search-input-wrapper">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="filter-name"
+                placeholder="Ví dụ: Minh Tuấn..."
+                oninput="applyFilters()"
+              />
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Chuyên khoa</label>
+            <select
+              id="filter-specialty"
+              class="filter-select"
+              onchange="applyFilters()"
+            >
+              <option value="all">Tất cả chuyên khoa</option>
+              <option value="Tim mạch">Tim mạch</option>
+              <option value="Thần kinh">Thần kinh</option>
+              <option value="Chấn thương chỉnh hình">
+                Chấn thương chỉnh hình
+              </option>
+              <option value="Nhi khoa">Nhi khoa</option>
+              <option value="Nội tiết">Nội tiết</option>
+              <option value="Nhãn khoa">Nhãn khoa</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Giới tính</label>
+            <select
+              id="filter-gender"
+              class="filter-select"
+              onchange="applyFilters()"
+            >
+              <option value="all">Tất cả</option>
+              <option value="nam">Nam</option>
+              <option value="nu">Nữ</option>
+            </select>
+          </div>
+
+          <div
+            class="filter-group"
+            style="
+              margin-top: 24px;
+              padding-top: 20px;
+              border-top: 1px dashed var(--border);
+            "
+          >
+            <label class="checkbox-group">
+              <input
+                type="checkbox"
+                id="filter-available"
+                onchange="applyFilters()"
+              />
+              Chỉ hiện bác sĩ còn suất khám
+            </label>
+          </div>
+
+          <button class="btn-reset" onclick="resetFilters()">
+            <i class="fas fa-sync-alt"></i> Đặt lại bộ lọc
+          </button>
+        </div>
+
+        <div>
+          <div class="results-header">
+            <div class="results-count">
+              Đã tìm thấy <span id="count-display">0</span> bác sĩ
+            </div>
+          </div>
+
+          <div class="doctors-grid" id="doctors-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div
+              class="logo-name"
+              style="font-family: &quot;Fraunces&quot;, serif; font-size: 26px"
+            >
+              medcare
+            </div>
+            <p>Nền tảng quản lý bệnh viện hàng đầu Việt Nam.</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span
+            >© 2026 Hệ thống Quản lý Bệnh viện MEDCARE. Đã đăng ký bản
+            quyền.</span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ===== DARK/LIGHT MODE LOGIC ===== */
+      const themeCheckbox = document.getElementById("theme-checkbox");
+      const currentTheme = localStorage.getItem("theme") || "light";
+      if (currentTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        if (themeCheckbox) themeCheckbox.checked = false;
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        if (themeCheckbox) themeCheckbox.checked = true;
+      }
+      if (themeCheckbox) {
+        themeCheckbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            document.documentElement.removeAttribute("data-theme");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type === "error" ? "error" : ""}`;
+        toast.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      /* ===== KIỂM TRA ĐĂNG NHẬP ===== */
+      document.addEventListener("DOMContentLoaded", () => {
+        const userStr = localStorage.getItem("medicare_currentUser");
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          const lastName = user.fullName.split(" ").pop();
+          const navActions = document.getElementById("nav-actions");
+          const loginBtn = document.getElementById("login-btn");
+          if (loginBtn) loginBtn.remove();
+
+          if (!document.getElementById("user-nav-item")) {
+            const userMenu = document.createElement("div");
+            userMenu.id = "user-nav-item";
+            userMenu.innerHTML = `
+              <div class="user-avatar-btn" onclick="toggleUserDropdown(event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 9px; border: 1.5px solid var(--border);">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;"><i class="fas fa-user"></i></div>
+                <span style="font-weight: 600; font-size: 14px; color: var(--text);">${lastName}</span>
+              </div>
+            `;
+            navActions.appendChild(userMenu);
+          }
+        }
+        renderDoctors(doctorsData);
+      });
+
+      function toggleUserDropdown(e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("user-dropdown");
+        if (dropdown) dropdown.classList.toggle("show");
+      }
+      document.addEventListener("click", function () {
+        const dropdown = document.getElementById("user-dropdown");
+        if (dropdown && dropdown.classList.contains("show"))
+          dropdown.classList.remove("show");
+      });
+      function logoutUser(e) {
+        e.preventDefault();
+        localStorage.removeItem("medicare_currentUser");
+        window.location.reload();
+      }
+
+      /* ===== DỮ LIỆU TÌM KIẾM CÓ THÔNG TIN SỐ CA (CASES) ===== */
+      // Khởi tạo mảng rỗng thay vì fix cứng dữ liệu
+      let doctorsData = [];
+
+      // Hàm tải dữ liệu bác sĩ từ SQL Database
+      async function loadDoctorsFromDB() {
+        try {
+          // Gọi API đến backend (Nhớ đổi port 5000 cho khớp với file .env của bạn)
+          const response = await fetch("http://127.0.0.1:5000/api/doctors");
+          const data = await response.json();
+
+          // Chuyển đổi format dữ liệu từ SQL cho phù hợp với Frontend
+          doctorsData = data.map((doc) => ({
+            id: doc.DoctorID,
+            name: doc.FullName,
+            specialty: doc.Specialty,
+            experience: doc.Experience || "Nhiều năm KN",
+            rating: doc.Rating || "5.0",
+            cases: doc.CurrentCases,
+            statusColor: doc.CurrentCases >= 20 ? "red" : "green", // Nếu >= 20 ca thì báo đỏ
+            image: doc.AvatarUrl,
+            gender: "all", // Mặc định để pass bộ lọc
+          }));
+
+          // Render ra màn hình
+          renderDoctors(doctorsData);
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu bác sĩ:", error);
+          document.getElementById("doctors-container").innerHTML =
+            "<p style='color:red;'>Lỗi kết nối cơ sở dữ liệu!</p>";
+        }
+      }
+
+      // Cập nhật lại sự kiện DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", () => {
+        /* ... (Giữ nguyên phần checkUserSession của bạn) ... */
+
+        // Thay vì gọi renderDoctors(doctorsData) ngay lập tức, ta gọi hàm lấy từ DB:
+        loadDoctorsFromDB();
+      });
+
+      function renderDoctors(data) {
+        const container = document.getElementById("doctors-container");
+        document.getElementById("count-display").textContent = data.length;
+
+        if (data.length === 0) {
+          container.innerHTML = `
+            <div class="no-results">
+              <i class="fas fa-search-minus"></i>
+              <h3>Không tìm thấy bác sĩ nào!</h3>
+              <p>Vui lòng thử lại với các tiêu chí tìm kiếm khác.</p>
+            </div>
+          `;
+          container.style.gridTemplateColumns = "1fr";
+          return;
+        }
+
+        if (window.innerWidth > 1024) {
+          container.style.gridTemplateColumns = "repeat(3, 1fr)";
+        } else if (window.innerWidth > 480) {
+          container.style.gridTemplateColumns = "repeat(2, 1fr)";
+        }
+
+        const htmlContent = data
+          .map((doctor) => {
+            // Tính số slot còn lại
+            const slotsLeft = 20 - doctor.cases;
+            const isFull = slotsLeft <= 0;
+            const statusText = isFull
+              ? "Hết suất khám"
+              : `Còn ${slotsLeft}/20 chỗ`;
+
+            return `
+          <div class="doctor-card card-base">
+            <div class="doctor-avatar">
+              <img src="${doctor.image}" alt="${doctor.name}" loading="lazy">
+              <div class="doctor-available">
+                <div class="dot-${isFull ? "red" : doctor.statusColor}"></div>
+                ${statusText}
+              </div>
+            </div>
+            <div class="doctor-info">
+              <div class="doctor-name">${doctor.name}</div>
+              <div class="doctor-spec">${doctor.specialty}</div>
+              <div class="doctor-meta" style="margin-bottom: 8px;">
+                <span class="doctor-meta-item"><i class="fas fa-star"></i> ${doctor.rating}</span>
+                <span class="doctor-meta-item"><i class="fas fa-briefcase"></i> ${doctor.experience}</span>
+              </div>
+              <div class="doctor-meta" style="border-top: 1px dashed var(--border); padding-top: 12px; margin-bottom: 16px;">
+                 <span class="doctor-meta-item" style="color: ${isFull ? "var(--accent)" : "var(--text)"}; font-weight: 600;">
+                   <i class="fas fa-ticket-alt" style="color: ${isFull ? "var(--accent)" : "var(--secondary)"};"></i> Đã đặt ${doctor.cases}/20 lượt
+                 </span>
+              </div>
+              
+              <a href="booking.html?doctorId=${doctor.id}" class="btn-book-sm" style="${isFull ? "pointer-events: none; opacity: 0.5; background: var(--bg); color: var(--muted);" : ""}">
+                <i class="fas fa-calendar-plus"></i> ${isFull ? "Đã kín lịch" : "Đặt khám ngay"}
+              </a>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+
+        container.innerHTML = htmlContent;
+      }
+
+      function applyFilters() {
+        const nameQuery = document
+          .getElementById("filter-name")
+          .value.toLowerCase();
+        const specialtyQuery =
+          document.getElementById("filter-specialty").value;
+        const genderQuery = document.getElementById("filter-gender").value;
+        const availableOnly =
+          document.getElementById("filter-available").checked;
+
+        const filteredData = doctorsData.filter((doc) => {
+          const matchName = doc.name.toLowerCase().includes(nameQuery);
+          const matchSpecialty =
+            specialtyQuery === "all" || doc.specialty === specialtyQuery;
+          const matchGender =
+            genderQuery === "all" || doc.gender === genderQuery;
+          const matchStatus = !availableOnly || doc.cases < 20; // Lọc bác sĩ chưa đủ 20 ca
+
+          return matchName && matchSpecialty && matchGender && matchStatus;
+        });
+
+        renderDoctors(filteredData);
+      }
+
+      function resetFilters() {
+        document.getElementById("filter-name").value = "";
+        document.getElementById("filter-specialty").value = "all";
+        document.getElementById("filter-gender").value = "all";
+        document.getElementById("filter-available").checked = false;
+        applyFilters();
+        showToast("Đã đặt lại bộ lọc");
+      }
+    </script>
+  </body>
+</html>
